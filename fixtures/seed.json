@@ -1,0 +1,7 @@
+{
+  "project": "重点药品生产保供资料",
+  "records": [
+    {"id": "drug-emergency-a", "kind": "medicine", "priority": "重点", "daily_demand": 42000, "regions": ["华东", "华中"]},
+    {"id": "line-plant-07", "kind": "production_line", "daily_capacity": 26000, "changeover_hours": 14, "materials": ["active-a", "vial-10ml"]}
+  ]
+}
