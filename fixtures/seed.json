@@ -1,7 +1,88 @@
 {
   "project": "重点药品生产保供资料",
-  "records": [
-    {"id": "drug-emergency-a", "kind": "medicine", "priority": "重点", "daily_demand": 42000, "regions": ["华东", "华中"]},
-    {"id": "line-plant-07", "kind": "production_line", "daily_capacity": 26000, "changeover_hours": 14, "materials": ["active-a", "vial-10ml"]}
+  "enterprises": [
+    {"id": "ent-huadong", "name": "华东制药"},
+    {"id": "ent-huabei", "name": "华北制药"}
+  ],
+  "regions": [
+    {"id": "region-east", "name": "华东地区"},
+    {"id": "region-central", "name": "华中地区"}
+  ],
+  "users": [
+    {"username": "regulator", "display_name": "国家保供调度", "role": "REGULATOR", "token": "tok-regulator"},
+    {"username": "ent-huadong", "display_name": "华东制药报送员", "role": "ENTERPRISE", "token": "tok-huadong", "enterprise_id": "ent-huadong"},
+    {"username": "ent-huabei", "display_name": "华北制药报送员", "role": "ENTERPRISE", "token": "tok-huabei", "enterprise_id": "ent-huabei"},
+    {"username": "region-east", "display_name": "华东区域调度", "role": "REGION", "token": "tok-east", "region_id": "region-east"},
+    {"username": "region-central", "display_name": "华中区域调度", "role": "REGION", "token": "tok-central", "region_id": "region-central"}
+  ],
+  "medicines": [
+    {"id": "med-a", "name": "急救药A", "priority": "重点", "unit": "支"},
+    {"id": "med-b", "name": "普通输液B", "priority": "常规", "unit": "袋"}
+  ],
+  "materials": [
+    {"id": "active-a", "name": "活性成分A", "unit": "kg"},
+    {"id": "vial-10ml", "name": "10ml西林瓶", "unit": "个"}
+  ],
+  "bom": [
+    {"medicine_id": "med-a", "material_id": "active-a", "qty_per_unit": 0.001},
+    {"medicine_id": "med-a", "material_id": "vial-10ml", "qty_per_unit": 1.0}
+  ],
+  "production_lines": [
+    {"id": "line-hd-07", "enterprise_id": "ent-huadong", "name": "华东07号线", "daily_capacity": 26000, "changeover_hours": 14, "qc_lead_hours": 24},
+    {"id": "line-hd-08", "enterprise_id": "ent-huadong", "name": "华东08号线", "daily_capacity": 20000, "changeover_hours": 8, "qc_lead_hours": 24},
+    {"id": "line-hb-02", "enterprise_id": "ent-huabei", "name": "华北02号线", "daily_capacity": 24000, "changeover_hours": 12, "qc_lead_hours": 36}
+  ],
+  "line_licenses": [
+    {"line_id": "line-hd-07", "medicine_id": "med-a"},
+    {"line_id": "line-hd-07", "medicine_id": "med-b"},
+    {"line_id": "line-hd-08", "medicine_id": "med-a"},
+    {"line_id": "line-hb-02", "medicine_id": "med-a"}
+  ],
+  "lanes": [
+    {"enterprise_id": "ent-huadong", "region_id": "region-east", "transport_hours": 6},
+    {"enterprise_id": "ent-huadong", "region_id": "region-central", "transport_hours": 18},
+    {"enterprise_id": "ent-huabei", "region_id": "region-east", "transport_hours": 20},
+    {"enterprise_id": "ent-huabei", "region_id": "region-central", "transport_hours": 8}
+  ],
+  "line_downtimes": [
+    {"id": "dt-hd07-maintain", "line_id": "line-hd-07", "start_ts": "2026-10-02T00:00:00+00:00", "end_ts": "2026-10-03T00:00:00+00:00", "reason": "设备月度检修"}
+  ],
+  "initial_reports": [
+    {
+      "enterprise_user": "ent-huadong",
+      "report_date": "2026-09-29",
+      "source_ts": "2026-09-29T08:00:00+00:00",
+      "reporter": "王工",
+      "lines": [
+        {"line_id": "line-hd-07", "theoretical_capacity": 26000, "awaiting_qc_qty": 18000, "wip_qty": 12000},
+        {"line_id": "line-hd-08", "theoretical_capacity": 20000, "awaiting_qc_qty": 0, "wip_qty": 0}
+      ],
+      "materials": [
+        {"material_id": "active-a", "on_hand_qty": 200.0},
+        {"material_id": "vial-10ml", "on_hand_qty": 300000}
+      ],
+      "batches": [
+        {"id": "hd-a-2401", "line_id": "line-hd-07", "medicine_id": "med-a", "status": "RELEASED", "planned_qty": 10000, "planned_start": "2026-09-27T06:00:00+00:00", "planned_finish": "2026-09-28T06:00:00+00:00", "expected_release_ts": "2026-09-29T06:00:00+00:00", "qty_released": 10000, "material_short": false},
+        {"id": "hd-a-2402", "line_id": "line-hd-07", "medicine_id": "med-a", "status": "AWAIT_QC", "planned_qty": 18000, "planned_start": "2026-09-28T08:00:00+00:00", "planned_finish": "2026-09-29T08:00:00+00:00", "expected_release_ts": "2026-09-30T20:00:00+00:00", "qty_released": 0, "material_short": false},
+        {"id": "hd-b-3001", "line_id": "line-hd-07", "medicine_id": "med-b", "status": "PLANNED", "planned_qty": 12000, "planned_start": "2026-10-01T00:00:00+00:00", "planned_finish": "2026-10-01T12:00:00+00:00", "expected_release_ts": "2026-10-02T12:00:00+00:00", "qty_released": 0, "material_short": false}
+      ]
+    },
+    {
+      "enterprise_user": "ent-huabei",
+      "report_date": "2026-09-29",
+      "source_ts": "2026-09-29T09:30:00+00:00",
+      "reporter": "李工",
+      "lines": [
+        {"line_id": "line-hb-02", "theoretical_capacity": 24000, "awaiting_qc_qty": 6000, "wip_qty": 9000}
+      ],
+      "materials": [
+        {"material_id": "active-a", "on_hand_qty": 30.0},
+        {"material_id": "vial-10ml", "on_hand_qty": 120000}
+      ],
+      "batches": [
+        {"id": "hb-a-1107", "line_id": "line-hb-02", "medicine_id": "med-a", "status": "IN_PROGRESS", "planned_qty": 9000, "planned_start": "2026-09-29T00:00:00+00:00", "planned_finish": "2026-09-30T00:00:00+00:00", "expected_release_ts": "2026-10-02T12:00:00+00:00", "qty_released": 0, "material_short": true},
+        {"id": "hb-a-1106", "line_id": "line-hb-02", "medicine_id": "med-a", "status": "AWAIT_QC", "planned_qty": 6000, "planned_start": "2026-09-28T00:00:00+00:00", "planned_finish": "2026-09-29T00:00:00+00:00", "expected_release_ts": "2026-10-01T00:00:00+00:00", "qty_released": 0, "material_short": false}
+      ]
+    }
   ]
 }
