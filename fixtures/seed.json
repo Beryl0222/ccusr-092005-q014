@@ -1,7 +1,51 @@
 {
   "project": "重点药品生产保供资料",
+  "as_of": "2026-09-30T05:00:00Z",
   "records": [
-    {"id": "drug-emergency-a", "kind": "medicine", "priority": "重点", "daily_demand": 42000, "regions": ["华东", "华中"]},
-    {"id": "line-plant-07", "kind": "production_line", "daily_capacity": 26000, "changeover_hours": 14, "materials": ["active-a", "vial-10ml"]}
+    {"id": "drug-emergency-a", "kind": "medicine", "name": "急救针A", "priority": "重点", "daily_demand": 42000},
+    {"id": "drug-b", "kind": "medicine", "name": "普通输液B", "priority": "常规", "daily_demand": 10000},
+
+    {"id": "region-east", "kind": "region", "name": "华东"},
+    {"id": "region-central", "kind": "region", "name": "华中"},
+
+    {"id": "ent-alpha", "kind": "enterprise", "name": "华东制药厂"},
+    {"id": "ent-beta", "kind": "enterprise", "name": "华中药业"},
+
+    {"id": "u-reg", "kind": "user", "enterprise_id": null, "role": "regulator", "name": "国家调度员"},
+    {"id": "u-alpha", "kind": "user", "enterprise_id": "ent-alpha", "role": "enterprise", "name": "华东制药厂报送员"},
+    {"id": "u-beta", "kind": "user", "enterprise_id": "ent-beta", "role": "enterprise", "name": "华中药业报送员"},
+
+    {"id": "line-alpha-01", "kind": "production_line", "enterprise_id": "ent-alpha", "name": "阿尔法1号线", "daily_capacity": 26000},
+    {"id": "line-alpha-02", "kind": "production_line", "enterprise_id": "ent-alpha", "name": "阿尔法2号线(仅普通输液许可)", "daily_capacity": 18000},
+    {"id": "line-beta-01", "kind": "production_line", "enterprise_id": "ent-beta", "name": "贝塔1号线", "daily_capacity": 22000},
+
+    {"kind": "license", "line_id": "line-alpha-01", "medicine_id": "drug-emergency-a"},
+    {"kind": "license", "line_id": "line-alpha-01", "medicine_id": "drug-b"},
+    {"kind": "license", "line_id": "line-alpha-02", "medicine_id": "drug-b"},
+    {"kind": "license", "line_id": "line-beta-01", "medicine_id": "drug-emergency-a"},
+
+    {"kind": "changeover", "line_id": "line-alpha-01", "from_medicine": "drug-b", "to_medicine": "drug-emergency-a", "hours": 8},
+    {"kind": "changeover", "line_id": "line-alpha-01", "from_medicine": "drug-emergency-a", "to_medicine": "drug-b", "hours": 4},
+    {"kind": "changeover", "line_id": "line-beta-01", "from_medicine": null, "to_medicine": "drug-emergency-a", "hours": 0},
+
+    {"id": "downtime-beta-oct1", "kind": "downtime", "line_id": "line-beta-01", "start_ts": "2026-10-01T00:00:00Z", "end_ts": "2026-10-01T10:00:00Z", "reason": "灌封机计划检修"},
+
+    {"id": "vial-10ml", "kind": "material", "name": "10ml西林瓶", "unit": "支"},
+    {"kind": "material_requirement", "medicine_id": "drug-emergency-a", "material_id": "vial-10ml", "per_unit": 1.0},
+
+    {"id": "supply-alpha-vials-1", "kind": "material_supply", "enterprise_id": "ent-alpha", "material_id": "vial-10ml", "available_ts": "2026-09-27T00:00:00Z", "quantity": 50000, "reporter": "u-alpha"},
+    {"id": "supply-beta-vials-1", "kind": "material_supply", "enterprise_id": "ent-beta", "material_id": "vial-10ml", "available_ts": "2026-09-27T00:00:00Z", "quantity": 30000, "reporter": "u-beta"},
+
+    {"kind": "transit", "enterprise_id": "ent-alpha", "region_id": "region-east", "hours": 6},
+    {"kind": "transit", "enterprise_id": "ent-alpha", "region_id": "region-central", "hours": 18},
+    {"kind": "transit", "enterprise_id": "ent-beta", "region_id": "region-central", "hours": 4},
+    {"kind": "transit", "enterprise_id": "ent-beta", "region_id": "region-east", "hours": 30},
+
+    {"id": "batch-a-rel-0928", "kind": "batch", "line_id": "line-alpha-01", "enterprise_id": "ent-alpha", "medicine_id": "drug-emergency-a", "start_ts": "2026-09-27T22:00:00Z", "produced_ts": "2026-09-28T06:00:00Z", "quantity": 20000, "qc_status": "released", "qc_decided_ts": "2026-09-29T02:00:00Z", "reporter": "u-alpha"},
+    {"id": "batch-a-rel-0929", "kind": "batch", "line_id": "line-alpha-01", "enterprise_id": "ent-alpha", "medicine_id": "drug-emergency-a", "start_ts": "2026-09-28T20:00:00Z", "produced_ts": "2026-09-29T04:00:00Z", "quantity": 12000, "qc_status": "released", "qc_decided_ts": "2026-09-30T01:00:00Z", "reporter": "u-alpha"},
+    {"id": "batch-b-alpha-0929", "kind": "batch", "line_id": "line-alpha-01", "enterprise_id": "ent-alpha", "medicine_id": "drug-b", "start_ts": "2026-09-29T12:00:00Z", "produced_ts": "2026-09-29T22:00:00Z", "quantity": 8000, "qc_status": "released", "qc_decided_ts": "2026-09-30T00:00:00Z", "reporter": "u-alpha"},
+    {"id": "batch-a-pend-0930", "kind": "batch", "line_id": "line-alpha-01", "enterprise_id": "ent-alpha", "medicine_id": "drug-emergency-a", "start_ts": "2026-09-30T06:30:00Z", "produced_ts": "2026-09-30T09:00:00Z", "qc_due_ts": "2026-09-30T12:00:00Z", "quantity": 10000, "qc_status": "pending", "reporter": "u-alpha"},
+    {"id": "batch-b-rel-0929", "kind": "batch", "line_id": "line-beta-01", "enterprise_id": "ent-beta", "medicine_id": "drug-emergency-a", "start_ts": "2026-09-29T02:00:00Z", "produced_ts": "2026-09-29T12:00:00Z", "quantity": 18000, "qc_status": "released", "qc_decided_ts": "2026-09-29T20:00:00Z", "reporter": "u-beta"},
+    {"id": "batch-b-rej-0928", "kind": "batch", "line_id": "line-beta-01", "enterprise_id": "ent-beta", "medicine_id": "drug-emergency-a", "start_ts": "2026-09-28T00:00:00Z", "produced_ts": "2026-09-28T08:00:00Z", "quantity": 6000, "qc_status": "rejected", "qc_decided_ts": "2026-09-29T00:00:00Z", "qc_reason": "无菌检查不合格", "reporter": "u-beta"}
   ]
 }

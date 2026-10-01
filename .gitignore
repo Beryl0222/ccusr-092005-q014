@@ -9,3 +9,6 @@ dist/
 build/
 coverage/
 .DS_Store
+*.db
+*.db-wal
+*.db-shm
